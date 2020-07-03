@@ -8,48 +8,50 @@ import requests
 import time
 import os
 import datetime
+import argparse
 
-my_region = "West Sussex"
-how_far = 30
+parser = argparse.ArgumentParser()
+parser.add_argument("--council", type=str, default='Oxfordshire', const=1, nargs='?')
+parser.add_argument("--how_far", type=int, default=30, const=1, nargs='?')
+parser.add_argument("--force_update", default=0, const=1, nargs='?')
+parser.add_argument("--nosplash", default=0, const=1, nargs='?')
+args = parser.parse_args()
 
 
+my_region = args.council
+how_far = args.how_far
+force_update = args.force_update
+splash = not args.nosplash
 
 
 cases_csv  = "cases.csv"
-# deaths_csv = "deaths.csv"
-here = os.path.isfile(cases_csv) # and os.path.isfile(deaths_csv)
+here = os.path.isfile(cases_csv)
 uptodate = False
 
 if here:
     print ("Checking the file timestamp...")
     time_cases  = os.path.getmtime(cases_csv)
-    # time_deaths = os.path.getmtime(deaths_csv)
     today = time.time()
     
-    uptodate = abs(time_cases-today)<12*3600 # and abs(time_deaths-today)<12*3600
+    uptodate = abs(time_cases-today)<12*3600
 else:
     print ("Data files aren't here")
 
-if (not uptodate or not here):
+    
+if (not uptodate or not here or force_update):
     print ("Refreshing the csvs")
     url_cases = "https://coronavirus.data.gov.uk/downloads/csv/coronavirus-cases_latest.csv"
-    # url_deaths = "https://coronavirus.data.gov.uk/downloads/csv/coronavirus-deaths_latest.csv"
 
     raw_cases  = requests.get(url_cases)
-    # raw_deaths = requests.get(url_deaths)
 
     cases_file = open(cases_csv,"w")
     cases_file.write(raw_cases.text)
     cases_file.close()
 
-    # deaths_file = open(deaths_csv, "w")
-    # deaths_file.write(raw_deaths.text)
-    # deaths_file.close()
 else:
     print("Files are up to date!")
 
 cases  = pd.read_csv(cases_csv)
-# deaths = pd.read_csv(deaths_csv)
 
 today = datetime.date.today()
 
@@ -67,8 +69,6 @@ if (region_cases.shape[0] == 0):
     for key in sorted(whatever.keys()):
         print (" - "+key)
     exit()
-    
-# region_deaths = deaths.loc[lambda deaths: deaths['Area name'] == my_region, :]
 
 
 cases_array  = [None]*how_far
@@ -104,4 +104,9 @@ ax.set_ylabel('Number of new cases in '+my_region)
 plt.grid()
 plt.tight_layout()
 plt.savefig('covid_cases_'+my_region.replace(" ", "_")+'.png')
-plt.show()
+
+if splash:
+    print("displaying")
+    plt.show()
+else:
+    print("not displaying")
