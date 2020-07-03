@@ -17,7 +17,6 @@ parser.add_argument("--force_update", default=0, const=1, nargs='?')
 parser.add_argument("--nosplash", default=0, const=1, nargs='?')
 args = parser.parse_args()
 
-
 my_region = args.council
 how_far = args.how_far
 force_update = args.force_update
