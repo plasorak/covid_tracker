@@ -12,3 +12,8 @@ The script downloads and saves a file (cases.csv) once a day. Also the image is 
 Finally!
 
 Damn.
+
+Ok because I'm very lazy this is now going to run on a cron job and update the heck out of this picture every day (if that works).
+
+![Oxfordshire](https://github.com/plasorak/covid_tracker/blob/master/covid_cases_Oxfordshire.png?raw=true)
+![West Sussex](https://github.com/plasorak/covid_tracker/blob/master/covid_cases_West_Sussex.png?raw=true)
