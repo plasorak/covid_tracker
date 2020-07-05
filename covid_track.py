@@ -77,12 +77,12 @@ for index, row in region_cases.iterrows():
     date = datetime.datetime.strptime(row['Specimen date'], '%Y-%m-%d').date()
     days_ago = (today - date).days
     
-    if (days_ago <= how_far):
+    if (days_ago < how_far):
         
         index = how_far-days_ago
-        
-        datec_array[index] = mdates.date2num(date)
-        cases_array[index] = row['Daily lab-confirmed cases']
+        print (days_ago)
+        datec_array[days_ago] = mdates.date2num(date)
+        cases_array[days_ago] = row['Daily lab-confirmed cases']
 
 
 loc = DayLocator()
